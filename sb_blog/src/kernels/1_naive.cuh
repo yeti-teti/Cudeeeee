@@ -1,7 +1,9 @@
 // Kernel: Naive, GFLOPs/s: 309.0 ,  Performance relative to cuBLAS: 1.3% 
 
+#pragma once
+
 #include<stdio.h>
-#incldue<stdlib.h>
+#include<stdlib.h>
 #include<cublas_v2.h>
 #include<cuda_runtime.h>
 
@@ -16,6 +18,7 @@ MxK * KxN = MxN
 __global__ void sgemm_naive(int M, int N, int K, int alpha, float* A, float* B, int beta, float* C){
 
     // Global index to access elements of the arrays
+    // Loads rows of matrix non-consecutively from memory.
     const uint x = blockIdx.x * blockDim.x + threadIdx.x;
     const uint y = blockIdx.y * blockDim.y + threadIdx.y;
 
