@@ -3,6 +3,7 @@
 #pragma once
 
 #include<algorithm>
+#include<cassert>
 #include<cstdlib>
 #include<cstdio>
 #include<cublas_v2.h>
@@ -44,8 +45,6 @@ __global__ void  __launch__bounds__((BM * BN) / (TM * TN), 1) sgemm2DBlocktiling
     const uint strideA = numThreadsBlocktile / BK;
     const uint innerRowB = threadIdx.x / BN;
     const uint innerColB = threadIdx.x % BN;
-
-
     // For both As and Bs we want each load to span full column width instead of spanning full row width for better GMEM coalescing 
     const uint strideB = numThreadsBlocktile / BN;
 
