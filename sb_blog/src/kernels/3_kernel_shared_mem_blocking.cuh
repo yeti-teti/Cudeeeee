@@ -59,5 +59,3 @@ __global__ void sgemm_shared_mem_block(int M, int N, int K, flaot* A, float* B, 
     }
     C[threadRow * N + threadCol] = alpha * tmp + beta * C[threadRow * N + threadCol];
 }
-
-
