@@ -16,8 +16,7 @@ void saxpy(int n, float a , float *x, float *y){ // Parameters: size of array, c
     // Value check for number of elements n
     if(i < n){
         y[i] = a * x[i] + y[i]; // // Element-wise work of SAXPY
-    }
-   
+    } 
 }
 
 // Main function (Host code)
