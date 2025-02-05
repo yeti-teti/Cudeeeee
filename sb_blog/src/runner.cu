@@ -525,24 +525,24 @@ void run_kernel(int kernel_num, int M, int N, int K, float alpha, float *A,
   case 6:
     runSgemmVectorize(M, N, K, alpha, A, B, beta, C);
     break;
-  case 7:
-    runSgemmResolveBankConflicts(M, N, K, alpha, A, B, beta, C);
-    break;
-  case 8:
-    runSgemmResolveBankExtraCol(M, N, K, alpha, A, B, beta, C);
-    break;
+  // case 7:
+  //   runSgemmResolveBankConflicts(M, N, K, alpha, A, B, beta, C);
+  //   break;
+  // case 8:
+  //   runSgemmResolveBankExtraCol(M, N, K, alpha, A, B, beta, C);
+  //   break;
   case 9:
     runSgemmAutotuned(M, N, K, alpha, A, B, beta, C);
     break;
   case 10:
     runSgemmWarptiling(M, N, K, alpha, A, B, beta, C);
     break;
-  case 11:
-    runSgemmDoubleBuffering(M, N, K, alpha, A, B, beta, C);
-    break;
-  case 12:
-    runSgemmDoubleBuffering2(M, N, K, alpha, A, B, beta, C);
-    break;
+  // case 11:
+  //   runSgemmDoubleBuffering(M, N, K, alpha, A, B, beta, C);
+  //   break;
+  // case 12:
+  //   runSgemmDoubleBuffering2(M, N, K, alpha, A, B, beta, C);
+  //   break;
   default:
     throw std::invalid_argument("Unknown kernel number");
   }
