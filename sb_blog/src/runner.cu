@@ -501,49 +501,49 @@ void runSgemmWarptiling(int M, int N, int K, float alpha, float *A, float *B,
 //       <<<gridDim, blockDim>>>(M, N, K, alpha, A, B, beta, C);
 // }
 
-// void run_kernel(int kernel_num, int M, int N, int K, float alpha, float *A,
-//                 float *B, float beta, float *C, cublasHandle_t handle) {
-//   switch (kernel_num) {
-//   case 0:
-//     runCublasFP32(handle, M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 1:
-//     run_sgemm_naive(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 2:
-//     run_sgemm_coalesce(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 3:
-//     run_sgemm_shared_mem_block(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 4:
-//     runSgemm1DBlocktiling(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 5:
-//     runSgemm2DBlocktiling(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 6:
-//     runSgemmVectorize(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 7:
-//     runSgemmResolveBankConflicts(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 8:
-//     runSgemmResolveBankExtraCol(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 9:
-//     runSgemmAutotuned(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 10:
-//     runSgemmWarptiling(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 11:
-//     runSgemmDoubleBuffering(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   case 12:
-//     runSgemmDoubleBuffering2(M, N, K, alpha, A, B, beta, C);
-//     break;
-//   default:
-//     throw std::invalid_argument("Unknown kernel number");
-//   }
-// }
+void run_kernel(int kernel_num, int M, int N, int K, float alpha, float *A,
+                float *B, float beta, float *C, cublasHandle_t handle) {
+  switch (kernel_num) {
+  case 0:
+    runCublasFP32(handle, M, N, K, alpha, A, B, beta, C);
+    break;
+  case 1:
+    run_sgemm_naive(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 2:
+    run_sgemm_coalesce(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 3:
+    run_sgemm_shared_mem_block(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 4:
+    runSgemm1DBlocktiling(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 5:
+    runSgemm2DBlocktiling(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 6:
+    runSgemmVectorize(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 7:
+    runSgemmResolveBankConflicts(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 8:
+    runSgemmResolveBankExtraCol(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 9:
+    runSgemmAutotuned(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 10:
+    runSgemmWarptiling(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 11:
+    runSgemmDoubleBuffering(M, N, K, alpha, A, B, beta, C);
+    break;
+  case 12:
+    runSgemmDoubleBuffering2(M, N, K, alpha, A, B, beta, C);
+    break;
+  default:
+    throw std::invalid_argument("Unknown kernel number");
+  }
+}
