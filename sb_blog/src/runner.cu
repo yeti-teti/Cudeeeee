@@ -356,15 +356,15 @@ void runSgemmWarptiling(int M, int N, int K, float alpha, float *A, float *B,
   constexpr uint NUM_WARPS = K10_NUM_THREADS / 32;
 
   // warptile in threadblocktile
-  static_assert((K10_BN % K10_WN == 0) and (K10_BM % K10_WM == 0));
-  static_assert((K10_BN / K10_WN) * (K10_BM / K10_WM) == NUM_WARPS);
+  static_assert((K10_BN % K10_WN == 0) and (K10_BM % K10_WM == 0), "Error");
+  static_assert((K10_BN / K10_WN) * (K10_BM / K10_WM) == NUM_WARPS, "Error");
 
   // threads in warpsubtile
-  static_assert((K10_WM * K10_WN) % (WARPSIZE * K10_TM * K10_TN * K10_WNITER) == 0);
+  static_assert((K10_WM * K10_WN) % (WARPSIZE * K10_TM * K10_TN * K10_WNITER) == 0, "Error");
   constexpr uint K10_WMITER =
       (K10_WM * K10_WN) / (32 * K10_TM * K10_TN * K10_WNITER);
   // warpsubtile in warptile
-  static_assert((K10_WM % K10_WMITER == 0) and (K10_WN % K10_WNITER == 0));
+  static_assert((K10_WM % K10_WMITER == 0) and (K10_WN % K10_WNITER == 0), "Error");
 
   static_assert((K10_NUM_THREADS * 4) % K10_BK == 0,
                 "NUM_THREADS*4 must be multiple of K9_BK to avoid quantization "
