@@ -1,5 +1,6 @@
 // Kernel: GMEM Coalescing, GFLOPS: 1986.5, Performance relative cuBLAS: 8.5% 
 
+#pragma once
 
 #include<cassert>
 #include<cstdio>
@@ -10,10 +11,12 @@
 
 
 template <const uint BLOCKSIZE>
-__global__ void sgemm_global_mem_coalesce(int M, int N, int K, float* A, float* B, int alpha, int beta, float* C){
+__global__ void sgemm_global_mem_coalesce(int M, int N, int K, float alpha,
+                                          const float *A, const float *B,
+                                          float beta, float *C) {
 
-    const cRow = blockDim.x * BLOCKSIZE + (threadIdx.x / BLOCKSIZE);
-    const cCol = blockDim.y * BLOCKSIZE + (threadIdx.x % BLOCKSIZE);
+    const uint cRow = blockDim.x * BLOCKSIZE + (threadIdx.x / BLOCKSIZE);
+    const uint cCol = blockDim.y * BLOCKSIZE + (threadIdx.x % BLOCKSIZE);
 
     if(cRow < M && cCol < N){
 

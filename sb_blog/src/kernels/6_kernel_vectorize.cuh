@@ -10,7 +10,8 @@
 #define CEIL_DIV(M, N) (((M) + (N)-1) / N)
 
 template <const int BM, const int BN, const int BK, const int TM, const int TN>
-__global__ void sgemmVectorize(int M, int N, int K , float* A, float* B, int alpha, int beta, float *C){
+__global__ void sgemmVectorize(int M, int N, int K, float alpha, float *A,
+                               float *B, float beta, float *C) {
 
     const uint cCol = blockIdx.x;
     const uint cRow = blockIdx.y;
@@ -30,10 +31,10 @@ __global__ void sgemmVectorize(int M, int N, int K , float* A, float* B, int alp
 
     // Calculating the indices that this thread will load in SMEM
     // We'll load 128bit / 4bit = 4 elements per thread at each step
-    const uint innerRowA = threadIdx.x / (B / 4);
-    const uint innerColA = threadIdx.x % (B / 4);
-    const uint innerRowB = threadIdx.x / (B / 4);
-    const uint innerColB = threadIdx.x % (B / 4);
+    const uint innerRowA = threadIdx.x / (BK / 4);
+    const uint innerColA = threadIdx.x % (BK / 4);
+    const uint innerRowB = threadIdx.x / (BN / 4);
+    const uint innerColB = threadIdx.x % (BN / 4);
 
     // Allocate thread local cache for results in register file
     float threadResult[TM * TN] = {0.0};
@@ -42,7 +43,7 @@ __global__ void sgemmVectorize(int M, int N, int K , float* A, float* B, int alp
     float regN[TN] = {0.0};
 
     // Outer most loop over blocktiles
-    for(uint bkIdx = 0; bkIdx<K ;bkIdx+=BK){
+    for (uint bkIdx = 0; bkIdx < K; bkIdx += BK) {
 
         // vectorize all loads and stores from/to GMEM using vector datatypes (float4)
         // Populate the SMEM caches

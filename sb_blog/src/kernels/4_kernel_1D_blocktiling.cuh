@@ -3,7 +3,7 @@
 #pragma once
 
 #include<algorithm>
-#include<assert>
+#include<cassert>
 #include<cstdlib>
 #include<cstdio>
 #include<cublas_v2.h>
@@ -17,7 +17,9 @@
 // TM: No. of rows of the output matrix C that each thread computes. Determines the number of rows of computed by each thread, which influences how much register storage each thread uses.
 // BM * BN: The size of the tile (block) of the output matrix C computed by each thread block.
 template <const int BM, const int BN, const int BK, const int TM>
-__global__ void sgemm1DBlocktiling(int M, int N, float* A, float* B, int alpha, int beta, float* C){
+__global__ void sgemm1DBlocktiling(int M, int N, int K, float alpha,
+                                   const float *A, const float *B, float beta,
+                                   float *C) {
 
     // If we flip x and y here we get ~30% less performance for large matrices. The current, 30% faster configuration ensures that blocks with sequential. blockIDs access columns of B sequentially, while sharing the same row of A. The slower configuration would share columns of A, but access into B would be non-sequential. So the faster configuration has better spatial locality and hence a greater L2 hit rate.
     const uint cRow = blockIdx.y;
@@ -68,7 +70,7 @@ __global__ void sgemm1DBlocktiling(int M, int N, float* A, float* B, int alpha, 
             // we make the dotproduct loop the outside loop, which facilitates reuse of the Bs entry, which we can cache in a tmp var.
             float tmpB = Bs[dotIdx * BN + threadCol];
             for(uint resIdx = 0; resIdx < TM; resIdx++){
-                threadResults[resIdx] += As[(threadRow * TM + resIdx) * BK + dotIdxs] * tmpB;
+                threadResults[resIdx] += As[(threadRow * TM + resIdx) * BK + dotIdx] * tmpB;
             }
         }
         __syncthreads();
@@ -76,6 +78,6 @@ __global__ void sgemm1DBlocktiling(int M, int N, float* A, float* B, int alpha, 
 
     // Write the results
     for(uint resIdx = 0;resIdx < TM; resIdx++){
-        C[(threadRow * TM + resIdx) * N + threadCol] = alpha * threadResults[resIdx] + beta * C[(thredIdx * TM + resIdx) * N + threadCol];
+        C[(threadRow * TM + resIdx) * N + threadCol] = alpha * threadResults[resIdx] + beta * C[(threadIdx * TM + resIdx) * N + threadCol];
     }
 }

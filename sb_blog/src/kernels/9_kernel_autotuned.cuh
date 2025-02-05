@@ -9,13 +9,15 @@
 
 
 #define CEIL_DIV(M, N) (((M) + (N)-1) / N)
-const K9_NUM_THREADS = 256;
+const int K9_NUM_THREADS = 256;
 
 // BM, BN and BK, which specify how much data we cache from GMEM into SMEM.
 // TM and TN, which specify how much data we cache from SMEM into the registers.
 // Optimal parameters vary quite a bit depending on the GPU model
 template <const int BM, const int BN, const int BK, const int TM, const int TN>
-__global__ void __launch_bounds__(K9_NUM_THREADS) sgemmAutotuned(int M, int N, int K , float* A, float* B, int alpha, int beta, float *C){
+__global__ void __launch_bounds__(K9_NUM_THREADS)
+    sgemmAutotuned(int M, int N, int K, float alpha, float *A, float *B,
+                   float beta, float *C) {
 
     const uint cCol = blockIdx.x;
     const uint cRow = blockIdx.y;

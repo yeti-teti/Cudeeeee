@@ -13,7 +13,9 @@
 #define CEIL_DIV(M,N) (((M) + (N) - 1) / (N))
 
 template <const int BLOCKSIZE>
-__global__ void sgemm_shared_mem_block(int M, int N, int K, flaot* A, float* B, int alpha, int beta, float* C){
+__global__ void sgemm_shared_mem_block(int M, int N, int K, float alpha,
+                                       const float *A, const float *B,
+                                       float beta, float *C) {
 
     // Output block we want to compute in this threadblock
     const uint cRow = blockIdx.x;
@@ -22,7 +24,7 @@ __global__ void sgemm_shared_mem_block(int M, int N, int K, flaot* A, float* B, 
     // Allocate buffer for current block in fast shared mem
     // Shared mem is shared between all threads in a block
     __shared__ float As[BLOCKSIZE * BLOCKSIZE];
-    __shared__ float Bs[BLOCKSiZE * BLOCKSIZE];
+    __shared__ float Bs[BLOCKSIZE * BLOCKSIZE];
 
     // Inner row and col we are accessing in this thread
     const uint threadCol = threadIdx.x / BLOCKSIZE;

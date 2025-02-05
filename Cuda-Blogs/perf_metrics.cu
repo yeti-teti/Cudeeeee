@@ -21,6 +21,8 @@ __global__ void saxpy(int n, int a, float* x, float *y){
 // Timing Kernel 
     // Execution with CPU timers
     //  CUDA events
+
+// Compute the theoretical peak bandwidth of a GPU. This calculation used the GPU’s memory clock rate and bus interface width, which we obtained from product literature.
 int main(){
 
     int N = 20 * (1 << 20);
