@@ -51,7 +51,7 @@ __global__ void __launch_bounds__((BM * BN) / (TM * TN), 1)
     const uint strideB = numThreadsBlocktile / BN;
 
     // Allocate thread-local cache for results in register file
-    float threadResuts[TM * TN] = {0.0};
+    float threadResults[TM * TN] = {0.0};
 
     // Register caches for As and Bs
     float regM[TM] = {0.0};
@@ -83,7 +83,7 @@ __global__ void __launch_bounds__((BM * BN) / (TM * TN), 1)
                 regM[i] = As[(threadRow * TM + i) * BK + dotIdx];
             }
             for(uint i=0;i<TN;i++){
-                regN[i] = BS[dotIdx * BN + threadCol * TN + i];
+                regN[i] = Bs[dotIdx * BN + threadCol * TN + i];
             }
             for(uint resIdxM = 0; resIdxM < TM ; resIdxM++){
                 for(uint resIdxN = 0;resIdxN < TN; resIdxN++){

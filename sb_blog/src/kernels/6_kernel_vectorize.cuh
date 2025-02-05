@@ -78,25 +78,21 @@ __global__ void sgemmVectorize(int M, int N, int K, float alpha, float *A,
         __syncthreads();
     } 
 
-    // Write out the results
-    for(uint regIdxM=0;regIdxM<TM;regIdxM+=1){
-        for(uint regIdxN=0;regIdxN<TN;regIdxN+=4){
-
-            // Load C vectors into registers (vectorize)
-            float4 tmp = reinterpret_cast<float4 *>(
-                &C[(threadRow * TM + resIdxM) * N + threadCol * TN + resIdxN]
-            )[0];
-
-            // Perform GEMM update in reg
-            tmp.x = alpha * threadResults[regIdxM * TN + regIdxN] + beta * tmp.x;
-            tmp.y = alpha * threadResults[regIdxM * TN + regIdxN + 1] + beta * tmp.y;
-            tmp.z = alpha * threadResults[regIdxM * TN + regIdxN + 2] + beta * tmp.z;
-            tmp.w = alpha * threadResults[regIdxM * TN + regIdxN + 3] + beta * tmp.w;
-            
-            // Write back
-            float4 tmp = reinterpret_cast<float4 *>(
-                &C[(threadRow * TM + resIdxM) * N + threadCol * TN + resIdxN]
-            )[0];
+    // write out the results
+    for (uint resIdxM = 0; resIdxM < TM; resIdxM += 1) {
+        for (uint resIdxN = 0; resIdxN < TN; resIdxN += 4) {
+        // load C vector into registers
+        float4 tmp = reinterpret_cast<float4 *>(
+            &C[(threadRow * TM + resIdxM) * N + threadCol * TN + resIdxN])[0];
+        // perform GEMM update in reg
+        tmp.x = alpha * threadResults[resIdxM * TN + resIdxN] + beta * tmp.x;
+        tmp.y = alpha * threadResults[resIdxM * TN + resIdxN + 1] + beta * tmp.y;
+        tmp.z = alpha * threadResults[resIdxM * TN + resIdxN + 2] + beta * tmp.z;
+        tmp.w = alpha * threadResults[resIdxM * TN + resIdxN + 3] + beta * tmp.w;
+        // write back
+        reinterpret_cast<float4 *>(
+            &C[(threadRow * TM + resIdxM) * N + threadCol * TN + resIdxN])[0] =
+            tmp;
         }
     }
 }

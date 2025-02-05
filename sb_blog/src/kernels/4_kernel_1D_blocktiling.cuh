@@ -76,8 +76,10 @@ __global__ void sgemm1DBlocktiling(int M, int N, int K, float alpha,
         __syncthreads();
     }
 
-    // Write the results
-    for(uint resIdx = 0;resIdx < TM; resIdx++){
-        C[(threadRow * TM + resIdx) * N + threadCol] = alpha * threadResults[resIdx] + beta * C[(threadIdx * TM + resIdx) * N + threadCol];
+   // write out the results
+    for (uint resIdx = 0; resIdx < TM; ++resIdx) {
+        C[(threadRow * TM + resIdx) * N + threadCol] =
+            alpha * threadResults[resIdx] +
+            beta * C[(threadRow * TM + resIdx) * N + threadCol];
     }
 }
