@@ -37,7 +37,7 @@ __global__ void sgemmVectorize(int M, int N, int K, float alpha, float *A,
     const uint innerColB = threadIdx.x % (BN / 4);
 
     // Allocate thread local cache for results in register file
-    float threadResult[TM * TN] = {0.0};
+    float threadResults[TM * TN] = {0.0};
     // Register caches for As and Bs
     float regM[TM] = {0.0};
     float regN[TN] = {0.0};
