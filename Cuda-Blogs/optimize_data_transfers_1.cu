@@ -1,5 +1,8 @@
 // https://developer.nvidia.com/blog/how-optimize-data-transfers-cuda-cc/
-
+// https://stackoverflow.com/questions/16119943/how-and-when-should-i-use-pitched-pointer-with-the-cuda-api
+// Measuring Data Transfer times with nvprof
+// Minimizing data transfers
+// Batching small transfers
 
 #include<iostream>
 #include<cuda_runtime.h>
@@ -8,7 +11,7 @@ using namespace std;
 
 int main(){
 
-    // Measuring Data Transfer times with nvprof
+    
     const unsigned int N = 1048576;
     const unsigned int bytes = N * sizeof(int);
 
